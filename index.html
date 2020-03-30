@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+	<title>Voice Assistance</title> 
+	<body>
+	
+	
+	<h1 style="text-align:center;">TechM Assistance</h1>
+    <style>
+        body{
+			background-image: url('/image/gcp2.png');
+			background-repeat: no-repeat;
+			background-position: center;            
+			height: 100%;
+			background-size: cover;
+			height: auto;
+		}
+        .box{
+            width: 300px;
+            height: auto;
+            margin:5vh auto 0;
+            text-align: center;
+            border:1px solid #ccc;
+            padding: 20px;
+            background: #fff;
+        }
+        .talkIcon{
+            width: 50px;
+            height: 70px;
+            border: 1px solid #000;
+            border-radius: 50%;
+            padding: 20px;
+            text-align: center;
+        }
+        .talkIcon:hover{background: #ccc; cursor: pointer}
+        #talkText{
+            width: 90%;
+            height: 30px;
+            font-size: 14px;
+            padding: 5px;
+            margin-top: 20px;
+        }
+        
+    </style>
+	<body>
+</head>
+
+  <script>
+      
+function tapToTalk() {
+    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+    let finalTranscript = '';
+    let recognition = new window.SpeechRecognition();
+
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 10;
+    recognition.continuous = true;
+
+    recognition.onresult = (event) => {
+      let interimTranscript = '';
+      for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+        let transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript;
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+
+      document.getElementById('talkText').value = finalTranscript + interimTranscript;
+	  var str = finalTranscript;
+	  var str2 = document.getElementById('talkText').value;
+	  console.log(document.getElementById('talkText').value);
+    }
+    recognition.start();}
+  </script>
+   
+    <div class="box">
+        <div class="mic"  >
+            <img class="talkIcon"   src="https://upload.wikimedia.org/wikipedia/commons/2/22/Google_microphone_logo.png" onclick="tapToTalk()"/>
+        </div>
+        <div class="view"><input type="text" id="talkText"/></div>
+    </div>
+
+</body>
+</html>
