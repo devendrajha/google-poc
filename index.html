@@ -4,20 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+		crossorigin="anonymous">
+	</script>
 	<title>Voice Assistance</title> 
-	<body>
+	<body onload = "getLocation()">
 	
 	
-	<h1 style="text-align:center;">TechM Assistance</h1>
+	<h1 style="text-align:center;">Driver Assistance</h1>
     <style>
         body{
-			background-image: url('/image/gcp2.png');
+			background-image: url('/util/gcp.png');
 			background-repeat: no-repeat;
 			background-position: center;            
-			height: 100%;
-			background-size: cover;
 			height: auto;
+			background-size: cover;
+
 		}
         .box{
             width: 300px;
@@ -49,9 +52,35 @@
 	<body>
 </head>
 
-  <script>
+<p id="demo"></p>
+
+<script>
+var x = document.getElementById("demo");
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+//var chr_1=position.coords.latitude+","+position.coords.longitude; 
+function showPosition(position) {
+   // x.innerHTML="Latitude: " + position.coords.latitude + 
+    //"<br>Longitude: " + position.coords.longitude;
+	
+}
+
+</script>
+
+<script>
+
       
 function tapToTalk() {
+    console.log('in else');
+	if($('#talkText').val().trim()!=''){
+		$('#talkText').val('');
+	}
     window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
     let finalTranscript = '';
     let recognition = new window.SpeechRecognition();
@@ -71,19 +100,41 @@ function tapToTalk() {
         }
       }
 
-      document.getElementById('talkText').value = finalTranscript + interimTranscript;
-	  var str = finalTranscript;
-	  var str2 = document.getElementById('talkText').value;
-	  console.log(document.getElementById('talkText').value);
-    }
+      document.getElementById('talkText').value = finalTranscript ;
+	  var str2 = finalTranscript;
+	  var str = document.getElementById('talkText').value;
+	  console.log('in voice',finalTranscript);
+	  if (str.includes("cal")) {
+		  console.log('in if');
+		  window.location.href='tel:8880559440';
+		console.log('in voice');
+		}else if(str.includes("navigate")) {
+		  console.log('in else');
+		  var str=$('#talkText').val();
+		  $('#talkText').val(str.replace("navigate to",""));
+		  document.getElementById('myform').submit();
+		  //window.location.href = "google-poc/map.html"
+		  
+		}else if(str.includes("music")) {
+		   //window.location.href = "google-poc/play.html"
+		   window.open('util/play.html', '_blank');
+		  
+		}
+	  
+   }
     recognition.start();}
-  </script>
+</script>
    
     <div class="box">
         <div class="mic"  >
-            <img class="talkIcon"   src="https://upload.wikimedia.org/wikipedia/commons/2/22/Google_microphone_logo.png" onclick="tapToTalk()"/>
+            <img class="talkIcon" src="https://upload.wikimedia.org/wikipedia/commons/2/22/Google_microphone_logo.png" onclick="tapToTalk()"/>
         </div>
-        <div class="view"><input type="text" id="talkText"/></div>
+		<form id="myform" action="http://maps.google.com/maps" method="get" target="_blank">
+			<div class="view"  >
+				<input type="hidden" value= 'Speak now....' style="text-align:center;" name="daddr" id="talkText"/>
+			</div>
+			<input type="hidden" name="saddr" value="geo" />
+		</form>
     </div>
 
 </body>
